@@ -25,6 +25,7 @@ RUN \
         py3-packaging=26.2-r0 \
         py3-pip=26.1.2-r0 \
         python3=3.14.7-r1 \
+        yq-go=4.53.3-r0 \
     \
     && pip install -r /tmp/requirements.txt \
     \

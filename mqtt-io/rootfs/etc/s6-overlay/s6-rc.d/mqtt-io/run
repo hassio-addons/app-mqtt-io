@@ -5,23 +5,32 @@
 # Runs MQTT IO
 # ==============================================================================
 declare configuration_file
+declare mqtt_host
 
 configuration_file=$(bashio::config 'configuration_file')
 if ! bashio::fs.file_exists "${configuration_file}"; then
-    bashio::log.fatal
-    bashio::log.fatal "Seems like the configured configuration file does"
-    bashio::log.fatal "not exists:"
-    bashio::log.fatal
-    bashio::log.fatal "${configuration_file}"
-    bashio::log.fatal
-    bashio::log.fatal "Please check the app configuration, or create the"
-    bashio::log.fatal "configuration file. More information about the"
-    bashio::log.fatal "configuration file format see:"
-    bashio::log.fatal
-    bashio::log.fatal "https://mqtt-io.app"
-    bashio::log.fatal
-    bashio::exit.nok
+    mkdir -p "$(dirname "${configuration_file}")" \
+        || bashio::exit.nok "Could not create the configuration directory"
+    cat <<EOF > "${configuration_file}"
+mqtt:
+  topic_prefix: mqtt_io
+  ha_discovery:
+    enabled: true
+EOF
+    bashio::log.info "Created default configuration: ${configuration_file}"
+fi
+
+mqtt_host=$(yq '.mqtt.host // ""' "${configuration_file}") \
+    || bashio::exit.nok "Could not read the MQTT IO configuration"
+
+if bashio::var.is_empty "${mqtt_host}" \
+    && bashio::var.has_value "$(bashio::services 'mqtt')"; then
+    export MQTT_IO_HOST="$(bashio::services 'mqtt' 'host')"
+    export MQTT_IO_PORT="$(bashio::services 'mqtt' 'port')"
+    export MQTT_IO_USER="$(bashio::services 'mqtt' 'username')"
+    export MQTT_IO_PASSWORD="$(bashio::services 'mqtt' 'password')"
+    bashio::log.info "Using the MQTT service provided by the Supervisor"
 fi
 
 bashio::log.info "Starting MQTT IO..."
-exec python3 -m mqtt_io "$(bashio::config 'configuration_file')"
+exec python3 -m mqtt_io "${configuration_file}"
