@@ -71,12 +71,6 @@
       "rangeStrategy": "pin"
     },
     {
-      "description": "setuptools 82+ dropped pkg_resources, which mqtt-io imports on startup",
-      "matchManagers": ["pip_requirements"],
-      "matchPackageNames": ["setuptools"],
-      "allowedVersions": "<82"
-    },
-    {
       "matchManagers": ["pip_requirements"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
