@@ -1,0 +1,41 @@
+Replace pkg_resources with importlib.metadata
+
+pkg_resources was removed in setuptools 82.0.0, so mqtt-io fails to import
+on any environment with a current setuptools. Every setuptools release that
+still ships pkg_resources is also covered by GHSA-h35f-9h28-mq5c, so pinning
+back is not an option either.
+
+Upstream issue: https://github.com/flyte/mqtt-io/issues/441
+
+--- a/mqtt_io/modules/__init__.py
++++ b/mqtt_io/modules/__init__.py
+@@ -8,8 +8,9 @@
+ from types import ModuleType
+ from typing import List
+ 
+-# pylint: disable=import-error
+-import pkg_resources # type: ignore
++from importlib.metadata import PackageNotFoundError, version
++
++from packaging.requirements import Requirement
+ 
+ from ..exceptions import CannotInstallModuleRequirements
+ 
+@@ -38,10 +39,15 @@
+         _LOG.debug("Module %r has no extra requirements to install.", module)
+         return
+ 
+-    pkgs_installed = pkg_resources.WorkingSet()
+     pkgs_required = []
+     for req in reqs:
+-        if pkgs_installed.find(pkg_resources.Requirement.parse(req)) is None:
++        requirement = Requirement(req)
++        try:
++            installed = version(requirement.name)
++        except PackageNotFoundError:
++            pkgs_required.append(req)
++            continue
++        if requirement.specifier and installed not in requirement.specifier:
+             pkgs_required.append(req)
+ 
+     if not pkgs_required:

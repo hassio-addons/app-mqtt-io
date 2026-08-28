@@ -5,8 +5,9 @@ FROM ${BUILD_FROM}
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Copy Python requirements file
+# Copy Python requirements file and patches
 COPY requirements.txt /tmp/
+COPY patches/ /tmp/patches/
 
 # Setup base
 # hadolint ignore=DL3003,DL3042
@@ -21,10 +22,14 @@ RUN \
     && apk add --no-cache \
         py3-bcrypt=5.0.0-r1 \
         py3-cryptography=47.0.0-r0 \
+        py3-packaging=26.2-r0 \
         py3-pip=26.1.2-r0 \
         python3=3.14.7-r1 \
     \
     && pip install -r /tmp/requirements.txt \
+    \
+    && patch -p1 -d "$(python3 -c 'import mqtt_io, pathlib; print(pathlib.Path(mqtt_io.__file__).parent.parent)')" \
+        < /tmp/patches/0001-replace-pkg-resources-with-importlib-metadata.patch \
     \
     && find /usr \
         \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
