@@ -34,6 +34,17 @@
       "datasourceTemplate": "custom.alpine",
       "depNameTemplate": "alpine_3_24/{{package}}",
       "extractVersionTemplate": "^{{{package}}}-(?<version>\\d.*)\\.apk$"
+    },
+    {
+      "description": "MQTT IO is pinned to a commit, as upstream rarely releases",
+      "customType": "regex",
+      "managerFilePatterns": ["/requirements\\.txt$/"],
+      "matchStrings": [
+        "git\\+(?<packageName>https://github\\.com/flyte/mqtt-io)@(?<currentDigest>[0-9a-f]{40})"
+      ],
+      "currentValueTemplate": "develop",
+      "depNameTemplate": "flyte/mqtt-io",
+      "datasourceTemplate": "git-refs"
     }
   ],
   "packageRules": [
