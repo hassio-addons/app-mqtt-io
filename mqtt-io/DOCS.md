@@ -52,9 +52,10 @@ If this file does not exist when the app starts, a default one is created
 for you. It enables Home Assistant discovery but does not expose anything
 yet, so you still need to add the modules and devices you want to use.
 
-If that file does not set `mqtt: host:`, the app uses the MQTT server that
-Home Assistant already knows about, so you do not need to repeat its address
-or credentials here. Set `mqtt: host:` yourself to use a different server.
+If that file does not set `mqtt: host:`, the app uses the MQTT server
+provided by an MQTT broker app, like the Mosquitto broker, so you do not need
+to repeat its address or credentials here. Set `mqtt: host:` yourself to use
+any other MQTT server.
 
 ### Option: `log_level`
 

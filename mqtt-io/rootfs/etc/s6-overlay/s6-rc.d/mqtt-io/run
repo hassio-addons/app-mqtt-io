@@ -10,6 +10,14 @@ declare mqtt_password
 declare mqtt_port
 declare mqtt_username
 
+# Deliberately without a document start marker, so it can also be appended to
+# a file that already has one.
+readonly DEFAULT_CONFIGURATION='mqtt:
+  topic_prefix: mqtt_io
+  ha_discovery:
+    enabled: true
+'
+
 configuration_file=$(bashio::config 'configuration_file')
 
 if ! bashio::fs.file_exists "${configuration_file}"; then
@@ -17,13 +25,7 @@ if ! bashio::fs.file_exists "${configuration_file}"; then
         bashio::exit.nok "Could not create the folder holding the configuration file"
     fi
 
-    cat <<'EOF' > "${configuration_file}"
----
-mqtt:
-  topic_prefix: mqtt_io
-  ha_discovery:
-    enabled: true
-EOF
+    printf '%s' "${DEFAULT_CONFIGURATION}" > "${configuration_file}"
 
     bashio::log.info "Created a default configuration file:"
     bashio::log.info "${configuration_file}"
@@ -33,13 +35,37 @@ EOF
     bashio::log.info "See https://mqtt-io.app for the configuration format."
 fi
 
+# Leave a file we cannot parse alone. MQTT IO reports the problem with it in
+# far more detail than we could here.
+if ! python3 -c 'import sys, yaml; yaml.safe_load(open(sys.argv[1]))' \
+    "${configuration_file}" 2> /dev/null; then
+    bashio::log.fatal
+    bashio::log.fatal "This is not a valid YAML file:"
+    bashio::log.fatal "${configuration_file}"
+    bashio::log.fatal
+    bashio::log.fatal "Please correct it, or remove it to have a default"
+    bashio::log.fatal "configuration file created in its place."
+    bashio::log.fatal
+    bashio::exit.nok
+fi
+
+# A file holding nothing but comments or whitespace parses to an empty
+# document, which makes MQTT IO fail with "document is missing". Give it
+# something to work with, keeping whatever the file already held.
+if python3 -c 'import sys, yaml; sys.exit(1 if yaml.safe_load(open(sys.argv[1])) else 0)' \
+    "${configuration_file}"; then
+    printf '%s' "${DEFAULT_CONFIGURATION}" >> "${configuration_file}"
+    bashio::log.warning "The configuration file held no configuration at all,"
+    bashio::log.warning "so a default one has been added to it."
+fi
+
 # The MQTT server from the configuration file wins. Only when it does not set
-# one, fall back to the MQTT service provided by the Supervisor.
+# one, fall back to the MQTT server provided by an MQTT broker app.
 mqtt_host=$(
     python3 -c 'import sys, yaml
 config = yaml.safe_load(open(sys.argv[1])) or {}
 print((config.get("mqtt") or {}).get("host") or "")' "${configuration_file}"
-) || bashio::exit.nok "Could not read ${configuration_file}, is it valid YAML?"
+) || bashio::exit.nok "Could not read ${configuration_file}"
 
 if bashio::var.is_empty "${mqtt_host}"; then
     if ! bashio::services.available 'mqtt'; then
@@ -49,12 +75,12 @@ if bashio::var.is_empty "${mqtt_host}"; then
         bashio::log.fatal "This app found no 'mqtt: host:' in:"
         bashio::log.fatal "${configuration_file}"
         bashio::log.fatal
-        bashio::log.fatal "and there is no MQTT service known to the"
-        bashio::log.fatal "Supervisor to fall back on."
+        bashio::log.fatal "and no app is providing an MQTT server for it"
+        bashio::log.fatal "to fall back on."
         bashio::log.fatal
-        bashio::log.fatal "Either set up the Home Assistant MQTT integration,"
-        bashio::log.fatal "or add the details of your own MQTT server to the"
-        bashio::log.fatal "configuration file above."
+        bashio::log.fatal "Either install and start an MQTT broker app, such"
+        bashio::log.fatal "as the Mosquitto broker, or add the details of your"
+        bashio::log.fatal "own MQTT server to the configuration file above."
         bashio::log.fatal
         bashio::exit.nok
     fi
@@ -69,7 +95,7 @@ if bashio::var.is_empty "${mqtt_host}"; then
     export MQTT_IO_PORT="${mqtt_port}"
     export MQTT_IO_USER="${mqtt_username}"
 
-    bashio::log.info "Using the MQTT server provided by Home Assistant."
+    bashio::log.info "Using the MQTT server provided by the Supervisor."
 fi
 
 bashio::log.info "Starting MQTT IO..."
