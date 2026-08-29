@@ -32,7 +32,7 @@ comparison to installing any other Home Assistant app.
 Example app configuration:
 
 ```yaml
-configuration_file: /config/mqtt-io.yml
+configuration_file: /config/mqtt-io/config.yml
 log_level: info
 ```
 
@@ -43,6 +43,13 @@ log_level: info
 The `configuration_file` option allows you to configure the configuration
 file MQTT IO will use to run. The default is `/config/mqtt-io/config.yml`,
 but you change it to something else if you want.
+
+`/config` here is this app's own configuration folder, not the Home Assistant
+configuration folder. If you ran an older version of this app, your existing
+configuration file is moved there for you the first time this version starts,
+and the log says where it ended up. The Home Assistant configuration folder is
+still available, as `/homeassistant`, should you want to keep the file there
+instead.
 
 For more information about the MQTT IO configuration file format, see:
 

@@ -5,6 +5,7 @@
 # Runs MQTT IO
 # ==============================================================================
 declare configuration_file
+declare legacy_configuration_file
 declare mqtt_host
 declare mqtt_password
 declare mqtt_port
@@ -19,6 +20,29 @@ readonly DEFAULT_CONFIGURATION='mqtt:
 '
 
 configuration_file=$(bashio::config 'configuration_file')
+
+# Older versions of this app had /config pointing at the Home Assistant
+# configuration folder, which is now /homeassistant. Move a configuration
+# file left behind there into this app's own configuration folder.
+if [[ "${configuration_file}" == /config/* ]] \
+    && ! bashio::fs.file_exists "${configuration_file}"; then
+    legacy_configuration_file="/homeassistant/${configuration_file#/config/}"
+
+    if bashio::fs.file_exists "${legacy_configuration_file}"; then
+        if ! mkdir -p "$(dirname "${configuration_file}")"; then
+            bashio::exit.nok "Could not create the folder holding the configuration file"
+        fi
+
+        if ! mv "${legacy_configuration_file}" "${configuration_file}"; then
+            bashio::exit.nok "Could not move the configuration file into this app's folder"
+        fi
+
+        bashio::log.info "Moved your configuration file out of the Home Assistant"
+        bashio::log.info "configuration folder, it now lives in this app's own"
+        bashio::log.info "configuration folder as:"
+        bashio::log.info "${configuration_file}"
+    fi
+fi
 
 if ! bashio::fs.file_exists "${configuration_file}"; then
     if ! mkdir -p "$(dirname "${configuration_file}")"; then
