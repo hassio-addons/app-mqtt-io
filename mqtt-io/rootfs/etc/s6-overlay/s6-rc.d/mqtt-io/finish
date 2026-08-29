@@ -1,7 +1,7 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# Home Assistant Community Add-on: MQTT IO
+# Home Assistant Community App: MQTT IO
 # Take down the S6 supervision tree when MQTT IO fails
 # ==============================================================================
 declare exit_code_container
