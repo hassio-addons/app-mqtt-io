@@ -17,10 +17,12 @@ comparison to installing any other Home Assistant app.
 1. Click the "Install" button to install the app.
 1. Set the location of the MQTT IO configuration file in the app options.
    By default, this will be `/config/mqtt-io/config.yml`.
-1. Create the MQTT IO configuration file. For information about the format
-   and configuration option, please consult the MQTT IO documentation:
-   <https://mqtt-io.app/2.2.6/#/config/scenarios>
-1. Start the "MQTT IO" app when the configuration is created.
+1. Start the "MQTT IO" app. If the configuration file does not exist yet, a
+   default one is created for you.
+1. Add the modules and devices you want to expose to that file, and restart
+   the app. For information about the format and configuration options,
+   please consult the MQTT IO documentation:
+   <https://mqtt-io.app/#/config/scenarios>
 1. Check the logs of the "MQTT IO" app to see if everything went well.
 
 ## Configuration
@@ -44,9 +46,16 @@ but you change it to something else if you want.
 
 For more information about the MQTT IO configuration file format, see:
 
-<https://mqtt-io.app/2.2.7/#/config/scenarios> and <https://mqtt-io.app/2.2.7/#/config/ha_discovery>
+<https://mqtt-io.app/#/config/scenarios> and <https://mqtt-io.app/#/config/ha_discovery>
 
-Please note that this configuration file is not created automatically.
+If this file does not exist when the app starts, a default one is created
+for you. It enables Home Assistant discovery but does not expose anything
+yet, so you still need to add the modules and devices you want to use.
+
+If that file does not set `mqtt: host:`, the app uses the MQTT server
+provided by an MQTT broker app, like the Mosquitto broker, so you do not need
+to repeat its address or credentials here. Set `mqtt: host:` yourself to use
+any other MQTT server.
 
 ### Option: `log_level`
 
