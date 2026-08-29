@@ -8,8 +8,11 @@ arch:
   - aarch64
   - amd64
 init: false
+hassio_api: true
 homeassistant_api: true
 full_access: true
+services:
+  - mqtt:want
 privileged:
   - SYS_RAWIO
 map:
