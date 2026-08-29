@@ -64,6 +64,18 @@ provided by an MQTT broker app, like the Mosquitto broker, so you do not need
 to repeat its address or credentials here. Set `mqtt: host:` yourself to use
 any other MQTT server.
 
+### Supported modules
+
+The dependencies for the MQTT IO modules that work on the architectures this
+app is built for are installed already, so they can be used straight from the
+configuration file without anything extra.
+
+Two of the modules MQTT IO offers cannot be used here. `adxl345` fails to
+install on any current Python, and `as3935` needs a package that is not
+published at all. A handful of GPIO modules for other boards, `beaglebone`,
+`orangepi`, `sunxi` and `dockerpi`, are also left out, as they target hardware
+this app is not built for.
+
 ### Option: `log_level`
 
 The `log_level` option controls the level of log output by the app and can

@@ -1,7 +1,12 @@
 adafruit-circuitpython-ads1x15==3.0.5
 adafruit-circuitpython-ahtx0==1.0.30
 adafruit-circuitpython-dht==4.0.12
+adafruit-circuitpython-ens160==1.1.2
 adafruit-circuitpython-mcp230xx==2.6.2
+adafruit-circuitpython-sht4x==1.0.27
+adafruit-circuitpython-tsl2561==3.3.25
+adafruit-circuitpython-veml7700==2.2.2
+Adafruit_BMP==1.5.4
 Adafruit-MCP3008==1.0.2
 bme680==2.0.0
 gpiod==2.5.0
@@ -14,8 +19,10 @@ pcf8575==0.3
 pi-ina219==1.4.1
 pifacecommon==4.2.2
 pifacedigitalio==3.0.5
+plantower==0.0.11
 pyserial==3.5
 RPi.bme280==0.2.4
 RPi.GPIO==0.7.1
 smbus2==0.6.1
+veml6075==0.0.2
 w1thermsensor==2.3.0
