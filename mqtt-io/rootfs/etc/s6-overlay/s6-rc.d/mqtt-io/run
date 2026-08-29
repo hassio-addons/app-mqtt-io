@@ -11,12 +11,14 @@ configuration_file=$(bashio::config 'configuration_file')
 if ! bashio::fs.file_exists "${configuration_file}"; then
     mkdir -p "$(dirname "${configuration_file}")" \
         || bashio::exit.nok "Could not create the configuration directory"
-    cat <<EOF > "${configuration_file}"
+    if ! cat <<EOF > "${configuration_file}"; then
 mqtt:
   topic_prefix: mqtt_io
   ha_discovery:
     enabled: true
 EOF
+        bashio::exit.nok "Could not write the MQTT IO configuration"
+    fi
     bashio::log.info "Created default configuration: ${configuration_file}"
 fi
 
