@@ -154,7 +154,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [addon-badge]: https://my.home-assistant.io/badges/supervisor_addon.svg
-[addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_mqtt_io&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
+[addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_mqtt-io&repository_url=https%3A%2F%2Fgithub.com%2Fhassio-addons%2Frepository
 [contributors]: https://github.com/hassio-addons/app-mqtt-io/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [discord]: https://discord.me/hassioaddons
