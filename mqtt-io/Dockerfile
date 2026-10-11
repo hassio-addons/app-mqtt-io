@@ -17,14 +17,14 @@ RUN \
         git=2.54.0-r0 \
         libffi-dev=3.5.2-r1 \
         py3-wheel=0.47.0-r0 \
-        python3-dev=3.14.7-r1 \
+        python3-dev=3.14.8-r0 \
     \
     && apk add --no-cache \
         py3-bcrypt=5.0.0-r1 \
         py3-cryptography=47.0.0-r0 \
         py3-packaging=26.2-r0 \
         py3-pip=26.1.2-r0 \
-        python3=3.14.7-r1 \
+        python3=3.14.8-r0 \
     \
     && pip install -r /tmp/requirements.txt \
     \
