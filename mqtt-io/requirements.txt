@@ -11,7 +11,7 @@ Adafruit-MCP3008==1.0.2
 bme680==2.0.0
 gpiod==2.5.0
 gpiozero==2.0.1.post3
-mqtt-io @ git+https://github.com/flyte/mqtt-io@6cb68d7143824ae98ab6036b27b45be4b98a4b04
+mqtt-io @ git+https://github.com/flyte/mqtt-io@24ae593f9c754514ebd4e94c44192535fdaea152
 paho-mqtt==2.1.0
 nfcpy==1.0.4
 pcf8574==0.1.3
