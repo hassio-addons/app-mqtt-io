@@ -9,7 +9,7 @@ adafruit-circuitpython-veml7700==2.2.2
 Adafruit_BMP==1.5.4
 Adafruit-MCP3008==1.0.2
 bme680==2.0.0
-gpiod==2.5.0
+gpiod==2.6.0
 gpiozero==2.0.1.post3
 mqtt-io @ git+https://github.com/flyte/mqtt-io@6cb68d7143824ae98ab6036b27b45be4b98a4b04
 paho-mqtt==2.1.0
