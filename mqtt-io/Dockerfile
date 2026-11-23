@@ -15,7 +15,7 @@ RUN \
     apk add --no-cache --virtual .build-dependencies \
         build-base=0.5-r4 \
         git=2.54.1-r0 \
-        libffi-dev=3.5.2-r1 \
+        libffi-dev=3.8.1-r0 \
         py3-wheel=0.47.0-r0 \
         python3-dev=3.14.10-r1 \
     \
